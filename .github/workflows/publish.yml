@@ -1,0 +1,122 @@
+name: Update & publish depot-cli
+
+on:
+  schedule:
+    # Daily at ~06:17 UTC. Adjust to whatever fits your release cadence.
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Depot CLI version to pin (e.g. "v2.101.47" or "2.101.47"). Leave blank to use the latest GitHub release.'
+        required: false
+        default: ''
+      force:
+        description: 'Re-run search/replace and re-push even if the version is unchanged.'
+        required: false
+        default: false
+        type: boolean
+      publish:
+        description: 'Push the resulting nupkg to the Chocolatey community feed.'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-depot-cli
+  cancel-in-progress: false
+
+jobs:
+  update-and-publish:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Chocolatey-AU
+        run: Install-Module -Name Chocolatey-AU -Force -Scope CurrentUser
+
+      - name: Run AU update
+        id: au
+        working-directory: depot-cli
+        env:
+          DEPOT_VERSION: ${{ github.event.inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $force = '${{ github.event.inputs.force }}' -eq 'true'
+          if ($force) { ./update.ps1 -Force } else { ./update.ps1 }
+
+      - name: Detect changes
+        id: changes
+        run: |
+          $status  = git status --porcelain
+          $changed = [bool]$status
+          "changed=$($changed.ToString().ToLower())" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $ver = (Select-Xml -Path depot-cli/depot-cli.nuspec -XPath '//*[local-name()="version"]').Node.InnerText
+          "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Current nuspec version: $ver"
+          Write-Host "Working tree changed:   $changed"
+
+      - name: Commit version bump
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "depot-cli: bump to ${{ steps.changes.outputs.version }}"
+          git push
+
+      - name: Create & push git tag
+        if: >-
+          (github.event_name == 'schedule' && steps.changes.outputs.changed == 'true') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+        run: |
+          $tag = "v${{ steps.changes.outputs.version }}"
+          $existing = git ls-remote --tags origin "refs/tags/$tag"
+          if ($existing) {
+            Write-Host "Tag $tag already exists on origin, skipping."
+          } else {
+            git tag -a $tag -m "depot-cli $tag"
+            git push origin $tag
+          }
+
+      - name: Pack nupkg
+        if: >-
+          (github.event_name == 'schedule' && steps.changes.outputs.changed == 'true') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+        working-directory: depot-cli
+        run: choco pack
+
+      - name: Push to Chocolatey community
+        if: >-
+          (github.event_name == 'schedule' && steps.changes.outputs.changed == 'true') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+        working-directory: depot-cli
+        env:
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+        run: |
+          if (-not $env:CHOCO_API_KEY) {
+            throw "CHOCO_API_KEY secret is not set. Add it under Settings > Secrets and variables > Actions."
+          }
+          $nupkg = Get-ChildItem -Filter 'depot-cli.*.nupkg' |
+                   Sort-Object LastWriteTime -Descending |
+                   Select-Object -First 1 -ExpandProperty FullName
+          if (-not $nupkg) { throw "No depot-cli.*.nupkg found to push." }
+          Write-Host "Pushing $nupkg"
+          choco push $nupkg --source=https://push.chocolatey.org/ --api-key="$env:CHOCO_API_KEY"
+
+      - name: Upload nupkg artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: depot-cli-nupkg
+          path: depot-cli/*.nupkg
+          if-no-files-found: ignore
