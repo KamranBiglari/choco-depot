@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>depot-cli</id>
+    <version>2.101.46</version>
+    <packageSourceUrl>https://github.com/KamranBiglari/choco-depot</packageSourceUrl>
+    <owners>KamranBiglari</owners>
+    <title>Depot CLI (Install)</title>
+    <authors>Depot Technologies Inc.</authors>
+    <projectUrl>https://depot.dev</projectUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/depot/cli@main/.github/depot-logo.png</iconUrl>
+    <copyright>Copyright (c) Depot Technologies Inc.</copyright>
+    <licenseUrl>https://github.com/depot/cli/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/depot/cli</projectSourceUrl>
+    <docsUrl>https://depot.dev/docs/cli/reference</docsUrl>
+    <bugTrackerUrl>https://github.com/depot/cli/issues</bugTrackerUrl>
+    <tags>depot docker container build buildkit cloud cli admin foss cross-platform</tags>
+    <summary>Depot CLI - build your Docker images in the cloud.</summary>
+    <description><![CDATA[
+Depot is a remote container build service that makes building Docker images
+faster by offloading work to fast, persistent cloud builders with a fully
+managed layer cache.
+
+The `depot` CLI is the official command-line interface for Depot. It supports:
+
+* `depot build` / `depot bake` - build Docker images remotely using Depot's
+  cloud infrastructure, a drop-in replacement for `docker build`.
+* Native multi-platform builds for `linux/amd64` and `linux/arm64` with no
+  emulation.
+* Fully-managed, persistent BuildKit cache shared across your team and CI.
+* `depot projects`, `depot org`, `depot cache` for managing Depot resources.
+* `depot pull` / `depot push` for image registry operations.
+* `depot configure-docker` to use Depot as the default Docker builder.
+* `depot login` / `depot logout` for authentication.
+
+## Package parameters
+
+This package has no parameters. After install, open a new shell and run:
+
+```
+depot --help
+depot login
+```
+
+## Notes
+
+* This is an unofficial Chocolatey package. The binaries are downloaded
+  directly from the official Depot CLI GitHub releases at install time and
+  verified with SHA256 checksums. See the VERIFICATION.txt file for details.
+* Source code for the Depot CLI is at https://github.com/depot/cli and is
+  licensed under the MIT License.
+]]></description>
+    <releaseNotes>https://github.com/depot/cli/releases/tag/v2.101.46</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
