@@ -109,12 +109,16 @@ jobs:
           if (-not $env:CHOCO_API_KEY) {
             throw "CHOCO_API_KEY secret is not set. Add it under Settings > Secrets and variables > Actions."
           }
+          Write-Host "API key length: $($env:CHOCO_API_KEY.Length) chars"
+
           $nupkg = Get-ChildItem -Filter 'depot-cli.*.nupkg' |
                    Sort-Object LastWriteTime -Descending |
                    Select-Object -First 1 -ExpandProperty FullName
           if (-not $nupkg) { throw "No depot-cli.*.nupkg found to push." }
           Write-Host "Pushing $nupkg"
-          choco push $nupkg --source=https://push.chocolatey.org/ --api-key="$env:CHOCO_API_KEY"
+
+          choco apikey add --source=https://push.chocolatey.org/ --api-key="$env:CHOCO_API_KEY" --confirm
+          choco push $nupkg --source=https://push.chocolatey.org/ --verbose --debug
 
       - name: Upload nupkg artifact
         if: always()
