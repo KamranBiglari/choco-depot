@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>depot-cli</id>
-    <version>2.101.49</version>
+    <version>2.101.52</version>
     <packageSourceUrl>https://github.com/KamranBiglari/choco-depot</packageSourceUrl>
     <owners>KamranBiglari</owners>
     <title>Depot CLI (Install)</title>
@@ -51,7 +51,7 @@ depot login
 * Source code for the Depot CLI is at https://github.com/depot/cli and is
   licensed under the MIT License.
 ]]></description>
-    <releaseNotes>https://github.com/depot/cli/releases/tag/v2.101.49</releaseNotes>
+    <releaseNotes>https://github.com/depot/cli/releases/tag/v2.101.52</releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
