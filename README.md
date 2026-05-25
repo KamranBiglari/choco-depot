@@ -62,11 +62,14 @@ You do **not** need to create a branch or hand-edit any files. Just:
 2. Fill in the form:
    - **version** *(optional)* - e.g. `v2.101.47` or just `2.101.47`.
      Leave blank to use the latest GitHub release.
-   - **force** - re-run search/replace even if the version is unchanged
-     (useful if you tweaked the nuspec and want a re-push).
    - **publish** - uncheck to produce and upload the `.nupkg` as a
      workflow artifact for inspection without pushing to the community
      feed.
+
+   If the upstream version hasn't moved, AU is a no-op and the existing
+   pinned files are packed and re-pushed as-is - useful if a previous
+   run's push failed (e.g. moderation lock) and you want to retry once
+   the underlying issue is resolved.
 3. Click **Run workflow**. The same pipeline as the scheduled job runs.
 
 ### What ends up in git
@@ -109,10 +112,13 @@ $env:DEPOT_VERSION = 'v2.101.47'; ./update.ps1 -Force   # pin a specific version
 ## Moderation
 
 First-time submissions to the Chocolatey community feed go through human
-moderation (usually a few days). Subsequent version bumps are reviewed
-automatically. If moderators request changes, edit the nuspec / install
-script on a branch, open a PR, merge, then re-run the workflow with
-**force = true** to re-push.
+moderation (usually a few days to a couple of weeks). While a version
+is in moderation, additional pushes for the same package id are blocked
+by the feed with a bare HTTP 403; this is normal and resolves on its
+own once the moderator approves the pending version. After approval,
+subsequent version bumps are reviewed automatically. If moderators
+request changes, edit the nuspec / install script on a branch, open a
+PR, merge, then re-run the workflow to re-push.
 
 ## Notes
 
