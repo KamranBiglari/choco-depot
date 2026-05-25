@@ -10,11 +10,6 @@ on:
         description: 'Depot CLI version to pin (e.g. "v2.101.47" or "2.101.47"). Leave blank to use the latest GitHub release.'
         required: false
         default: ''
-      force:
-        description: 'Re-run search/replace and re-push even if the version is unchanged.'
-        required: false
-        default: false
-        type: boolean
       publish:
         description: 'Push the resulting nupkg to the Chocolatey community feed.'
         required: false
@@ -55,9 +50,7 @@ jobs:
         env:
           DEPOT_VERSION: ${{ github.event.inputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          $force = '${{ github.event.inputs.force }}' -eq 'true'
-          if ($force) { ./update.ps1 -Force } else { ./update.ps1 }
+        run: ./update.ps1
 
       - name: Detect changes
         id: changes

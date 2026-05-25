@@ -8,7 +8,7 @@
     <title>Depot CLI (Install)</title>
     <authors>Depot Technologies Inc.</authors>
     <projectUrl>https://depot.dev</projectUrl>
-    <iconUrl>https://cdn.jsdelivr.net/gh/depot/cli@main/.github/depot-logo.png</iconUrl>
+    <iconUrl>https://depot.dev/apple-touch-icon.png</iconUrl>
     <copyright>Copyright (c) Depot Technologies Inc.</copyright>
     <licenseUrl>https://github.com/depot/cli/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
