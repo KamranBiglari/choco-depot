@@ -9,13 +9,13 @@ verified with SHA256 checksums that are pinned inside
 tools\chocolateyinstall.ps1.
 
 Upstream project: https://github.com/depot/cli
-Upstream release: https://github.com/depot/cli/releases/tag/v2.101.70
+Upstream release: https://github.com/depot/cli/releases/tag/v2.101.72
 
-URL    (windows_386):   https://github.com/depot/cli/releases/download/v2.101.70/depot_2.101.70_windows_386.zip
-SHA256 (windows_386):   61b4fb51a937406e7b4b0af782026ae56040fe918e3ba008904d8edb813d4727
+URL    (windows_386):   https://github.com/depot/cli/releases/download/v2.101.72/depot_2.101.72_windows_386.zip
+SHA256 (windows_386):   519195e7929258dbb01354fe85ea798304799892c545e0de357a6ada5705254d
 
-URL    (windows_amd64): https://github.com/depot/cli/releases/download/v2.101.70/depot_2.101.70_windows_amd64.zip
-SHA256 (windows_amd64): 01b80b618a86549ae4463a12cc4a1e4fd5fd11fbf6df37f992f3c9c68bbdfef1
+URL    (windows_amd64): https://github.com/depot/cli/releases/download/v2.101.72/depot_2.101.72_windows_amd64.zip
+SHA256 (windows_amd64): 57e9f69d150244a939234d639ec0b8bc1125aeec7c5e981405d47177956ef714
 
 To verify the checksums yourself, download each archive from the URL above
 and run the following in PowerShell, comparing the result with the value
