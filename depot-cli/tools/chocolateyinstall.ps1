@@ -1,16 +1,16 @@
 ﻿$ErrorActionPreference = 'Stop'
 
 $toolsDir = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)"
-$version  = '2.102.13'
+$version  = '2.102.14'
 
 $packageArgs = @{
   packageName    = $env:ChocolateyPackageName
   unzipLocation  = $toolsDir
   url            = "https://github.com/depot/cli/releases/download/v$version/depot_${version}_windows_386.zip"
-  checksum       = '7e69c6f9db8d6408eda30c7da11a2863ae15334373b3b1d7ead3f874a5f6b9b3'
+  checksum       = '8c1a33b2abcaeade1cf613a8f7845d38ada6a826a8b5fe370d3fa1e7d42b218c'
   checksumType   = 'sha256'
   url64bit       = "https://github.com/depot/cli/releases/download/v$version/depot_${version}_windows_amd64.zip"
-  checksum64     = 'b45daba6db2dfa17538fa9232c701df61cf135ce26d1b79fd4b6f7ec571e7fa0'
+  checksum64     = 'c4084903089f21c83ab9d156b4c53700853631e00799bbd412cfbd4fbe2b8db8'
   checksumType64 = 'sha256'
 }
 
